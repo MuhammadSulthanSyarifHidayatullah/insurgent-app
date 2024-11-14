@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductSize;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -15,13 +16,18 @@ class ProductController extends Controller
         $products = Product::all();
         return view('products.index', compact('products'));
     }
+    public function adminIndex()
+    {
+        $products = Product::all();
+        return view('admin.products.index', compact('products'));
+    }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('products.create');
+        return view('admin.products.create');
     }
 
     /**
@@ -54,7 +60,17 @@ class ProductController extends Controller
 
         $product->save();
 
-        return redirect()->route('products.index')->with('success', 'Product created successfully!');
+
+        $sizes = ['S', 'M', 'L', 'XL'];
+        foreach ($sizes as $size) {
+            ProductSize::create([
+                'product_id' => $product->id,
+                'size' => $size,
+                // 'stock' => 0, // Set default stock ke 0 atau sesuai kebutuhan
+            ]);
+        }
+
+        return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
     }
 
     /**
@@ -62,9 +78,10 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::findOrFail($id); // Cari produk berdasarkan ID atau tampilkan 404 jika tidak ditemukan
-        return view('products.show', compact('product')); // Mengirim data produk ke view
+        $product = Product::with('sizes')->findOrFail($id); // Mengambil data produk beserta ukuran
+        return view('products.show', compact('product'));
     }
+
 
 
     /**
@@ -73,7 +90,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id); // Temukan produk berdasarkan ID
-        return view('products.edit', compact('product'));
+        return view('admin.products.edit', compact('product'));
     }
 
     /**

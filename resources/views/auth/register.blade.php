@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-slot name="title">Register</x-slot>
     <a class="flex justify-center" href="#">
-        <x-application-smalllogo class="h-24"></x-application-smalllogo>
+        <x-application-smalllogo class=""></x-application-smalllogo>
     </a>
     <h1 class="text-xl font-bold text-gray-900 text-center">
         REGISTER
