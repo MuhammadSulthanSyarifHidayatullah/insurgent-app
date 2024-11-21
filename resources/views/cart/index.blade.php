@@ -11,9 +11,10 @@
                 <div class="mt-8">
                     <ul class="space-y-6">
                         @foreach ($cartItems as $item)
-                            <li class="flex items-center gap-6 py-4 px-2 border-b border-gray-400 bg-gray-200 rounded-lg">
-                                <img src="{{ asset('images/' . $item->product->image) }}"
-                                    alt="{{ $item->product->name }}" class="ml-3 w-20 h-20 rounded object-cover" />
+                            <li
+                                class="flex items-center gap-6 py-4 px-2 border-b border-gray-400 bg-gray-200 rounded-lg">
+                                <img src="{{ asset('images/' . $item->product->image) }}" alt="{{ $item->product->name }}"
+                                    class="ml-3 w-20 h-20 rounded object-cover" />
 
                                 <div class="flex-1">
                                     <h3 class="text-lg font-semibold text-gray-900">{{ $item->product->name }}</h3>
@@ -58,7 +59,7 @@
                             <dl class="space-y-1 text-base text-gray-700">
                                 @php
                                     $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
-                                    $tax = $subtotal * 0.10; // Pajak 10%
+                                    $tax = $subtotal * 0.1; // Pajak 10%
                                     $total = $subtotal + $tax;
                                 @endphp
                                 <div class="flex justify-between">
@@ -76,10 +77,14 @@
                             </dl>
 
                             <div class="flex justify-end">
-                                <a {{-- href="{{ route('checkout.index') }}" --}}
-                                    class="block rounded bg-gray-700 px-6 py-3 text-base text-gray-100 transition hover:bg-gray-600">
-                                    Checkout
-                                </a>
+                                {{-- <form action="{{ route('checkout.process') }}" method="POST"> --}}
+                                    @csrf
+                                    <button type="submit"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                                        Checkout
+                                    </button>
+                                </form>
+
                             </div>
                         </div>
                     </div>
