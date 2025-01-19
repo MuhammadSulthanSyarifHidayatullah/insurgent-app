@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="title">Detail Product | Partisan</x-slot>
+    <x-slot name="title">{{ $product->name }} | Partisan</x-slot>
 
     <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
