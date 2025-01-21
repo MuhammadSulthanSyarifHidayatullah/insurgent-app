@@ -48,4 +48,28 @@ class Product extends Model
     {
         return $this->hasMany(ProductSize::class);
     }
+    public function hasEnoughStock($quantity)
+    {
+        return $this->stock >= $quantity;
+    }
+
+    public function decreaseStock($quantity)
+    {
+        if ($this->hasEnoughStock($quantity)) {
+            $this->stock -= $quantity;
+            $this->save();
+            return true;
+        }
+        return false;
+    }
+    public function canBeDeleted()
+    {
+        return !$this->invoiceItems()->exists();
+    }
+
+    public function invoiceItems()
+    {
+        return $this->hasMany(InvoiceItem::class);
+    }
+
 }

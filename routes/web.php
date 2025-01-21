@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StatisticsController;
@@ -33,6 +34,7 @@ Route::middleware(['role:admin'])->group(function () {
     Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::get('/admin/statistics', [StatisticsController::class, 'index'])->name('statistics');
+    Route::get('/admin/invoices', [InvoiceController::class, 'index'])->name('invoice.index');
 });
 
 
@@ -44,7 +46,12 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/remove/{cart}', [CartController::class, 'remove'])->name('cart.remove');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::post('/checkout', [InvoiceController::class, 'checkout'])->name('checkout');
+    Route::get('/invoice/{invoice}', [InvoiceController::class, 'show'])->name('invoice.show');
+    Route::post('/invoice/{invoice}/pay', [InvoiceController::class, 'pay'])->name('invoice.pay');
 
+});
 
 
 

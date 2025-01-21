@@ -34,7 +34,7 @@
         <main>
             {{ $slot }}
         </main>
-        <footer>
+        <footer class="bg-gray-300">
             @yield('footer', view('layouts.footer'))
         </footer>
 
