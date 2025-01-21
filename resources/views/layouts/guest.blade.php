@@ -16,7 +16,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans text-gray-900 antialiased">
+<body class="font-sans text-gray-900 antialiased h-screen">
         <div class="lg:grid lg:min-h-screen lg:grid-cols-12 bg-gray-100">
             <aside class="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
                 <img alt=""

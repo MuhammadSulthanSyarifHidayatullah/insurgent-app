@@ -19,7 +19,7 @@
                         <i class="fa-solid fa-cart-shopping fa-xl"></i>
                     </span>
                 </div>
-                <p class="text-3xl font-bold text-gray-900">123</p>
+                <p class="text-3xl font-bold text-gray-900">{{ number_format($stats['invoice']) }}</p>
             </div>
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex items-center justify-between mb-4">

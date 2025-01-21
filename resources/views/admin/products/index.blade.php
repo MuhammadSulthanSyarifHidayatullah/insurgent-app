@@ -1,6 +1,6 @@
 <x-admin-layout>
     <x-slot name="title">Product | Admin Partisan</x-slot>
-    <div class="overflow-x-auto rounded-md">    
+    <div class="overflow-x-auto rounded-md pl-4">    
         <div class="flex p-4 justify-end">
             <a href="{{ route('products.create') }}">
                 <x-primary-button class="bg-blue-500 hover:bg-white hover:text-blue-500 border hover:border-blue-500 focus:bg-blue-500 active:bg-blue-500">

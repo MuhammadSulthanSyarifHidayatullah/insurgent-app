@@ -28,22 +28,26 @@
                                 {{ __('Admin Menu') }}
                             </x-admin-nav>
                         @endrole
-
                     </div>
                 </div>
             </div>
 
             <!-- Right Side (Login/Register or Profile) -->
             <div class="hidden sm:flex sm:items-center sm:ms-6 gap-4">
-                <a href="{{ route('cart.index') }}">
+                <a href="{{ route('cart.index') }}" class="relative">
                     <span style="color: #d1d5db">
                         <i class="fa-solid fa-cart-shopping fa-lg"></i>
                     </span>
+                    @if (session('cartItemCount', 0) > 0)
+                        <span
+                            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                            {{ session('cartItemCount') }}
+                        </span>
+                    @endif
                 </a>
 
                 @guest
                     <div class="gap-2">
-
                         <a href="{{ route('login') }}">
                             <x-secondary-button class="border-gray-800 border-[1.5px]">Login <i
                                     class=" ml-2 fa-solid fa-arrow-right"></i></x-secondary-button>
@@ -111,6 +115,15 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.index')" class="relative inline-block">
+                {{ __('Cart') }}
+                @if (session('cartItemCount', 0) > 0)
+                    <span
+                        class="absolute top-0 right-0 -mt-1 -mr-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {{ session('cartItemCount') }}
+                    </span>
+                @endif
             </x-responsive-nav-link>
         </div>
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-// use App\Models\Order;
+use App\Models\Invoice;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -13,7 +13,7 @@ class StatisticsController extends Controller
     {
         $stats = [
             'users' => User::count(),
-            // 'orders' => Order::count(),
+            'invoice' => Invoice::count(),
             'products' => Product::count(),
         ];
 
