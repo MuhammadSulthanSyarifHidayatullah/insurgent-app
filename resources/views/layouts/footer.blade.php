@@ -1,6 +1,6 @@
 
-<footer class="bg-gray-300 pt-10">
-    <div class="mx-auto max-w-5xl px-4 pb-16  sm:px-6 lg:px-8">
+<footer class="">
+    <div class="mx-auto max-w-5xl px-4 pb-16 bg-gray-300 sm:px-6 lg:px-8">
         <div class="flex justify-center">
             <x-application-logo class="h-32"></x-application-logo>
         </div>

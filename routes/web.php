@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
@@ -35,6 +37,11 @@ Route::middleware(['role:admin'])->group(function () {
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::get('/admin/statistics', [StatisticsController::class, 'index'])->name('statistics');
     Route::get('/admin/invoices', [InvoiceController::class, 'index'])->name('invoice.index');
+    Route::get('/admin/users',[RegisteredUserController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users', [RegisteredUserController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users/{user}/edit', [RegisteredUserController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/admin/users/{user}', [RegisteredUserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/{user}', [RegisteredUserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
 
@@ -47,10 +54,11 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::post('/checkout', [InvoiceController::class, 'checkout'])->name('checkout');
     Route::get('/invoice/{invoice}', [InvoiceController::class, 'show'])->name('invoice.show');
     Route::post('/invoice/{invoice}/pay', [InvoiceController::class, 'pay'])->name('invoice.pay');
-
+    Route::get('/my-invoices', [InvoiceController::class, 'userInvoices'])->name('user.invoices');
+    Route::get('/checkout', [CartController::class, 'showCheckoutForm'])->name('checkout.form');
+    Route::post('/checkout', [CartController::class, 'processCheckout'])->name('checkout.process');
 });
 
 

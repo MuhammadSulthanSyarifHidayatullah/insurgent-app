@@ -68,7 +68,7 @@
                                 <dl class="space-y-1 text-base text-gray-700">
                                     @php
                                         $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
-                                        $tax = $subtotal * 0.12; // Pajak 12%
+                                        $tax = $subtotal * 0.1; // Pajak 10%
                                         $total = $subtotal + $tax;
                                     @endphp
                                     <div class="flex justify-between">
@@ -76,7 +76,7 @@
                                         <dd>Rp {{ number_format($subtotal, 2, ',', '.') }}</dd>
                                     </div>
                                     <div class="flex justify-between">
-                                        <dt>Tax (12%)</dt>
+                                        <dt>Tax (10%)</dt>
                                         <dd>Rp {{ number_format($tax, 2, ',', '.') }}</dd>
                                     </div>
                                     <div class="flex justify-between font-medium">
@@ -87,8 +87,7 @@
 
                                 @if (!$cartItems->isEmpty())
                                     <div class="flex justify-end">
-                                        <form action="{{ route('checkout') }}" method="POST">
-                                            @csrf
+                                        <form action="{{ route('checkout.form') }}" method="GET">
                                             <button type="submit"
                                                 class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
                                                 Checkout

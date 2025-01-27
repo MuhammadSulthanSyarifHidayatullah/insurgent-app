@@ -83,4 +83,13 @@ class InvoiceController extends Controller
         $invoices = Invoice::with('user')->latest()->paginate(10);
         return view('admin.invoices.index', compact('invoices'));
     }
+    public function userInvoices()
+    {
+        $user = Auth::user();
+        $invoices = Invoice::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('invoice.user-invoices', compact('invoices'));
+    }
 }
