@@ -70,8 +70,35 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Produk berhasil dihapus dari cart');
     }
 
-    public function checkout()
+    public function showCheckoutForm()
     {
+        $user = Auth::user();
+        $cartItems = Cart::where('user_id', $user->id)->with('product')->get();
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
+        $subtotal = $cartItems->sum(function ($item) {
+            return $item->quantity * $item->price;
+        });
+        $tax = $subtotal * 0.12; // 12% tax
+        $total = $subtotal + $tax;
+
+        return view('cart.checkout_form', compact('cartItems', 'subtotal', 'tax', 'total', 'user'));
+    }
+
+    public function processCheckout(Request $request)
+    {
+        $request->validate([
+            'address' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'postal_code' => 'required|string',
+            'country' => 'required|string',
+            'payment_method' => 'required|string|in:credit_card,paypal,bank_transfer',
+        ]);
+
         $user = Auth::user();
         $cartItems = Cart::where('user_id', $user->id)->with('product')->get();
 
@@ -100,7 +127,6 @@ class CartController extends Controller
             
                 $subtotal += $item->quantity * $item->price;
             }
-            
 
             // If any items are out of stock, rollback and return with error
             if (!empty($outOfStockItems)) {
@@ -118,6 +144,13 @@ class CartController extends Controller
                 'tax' => $tax,
                 'total_amount' => $totalAmount,
                 'status' => 'pending',
+                'name' => $user->name,
+                'address' => $request->address,
+                'city' => $request->city,
+                'state' => $request->state,
+                'postal_code' => $request->postal_code,
+                'country' => $request->country,
+                'payment_method' => $request->payment_method,
             ]);
 
             foreach ($cartItems as $item) {

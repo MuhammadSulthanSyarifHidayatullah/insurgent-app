@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <div class="flex justify-center">
         <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -39,4 +39,4 @@
     @section('footer')
     @endsection
 
-</x-app-layout>
+</x-admin-layout>

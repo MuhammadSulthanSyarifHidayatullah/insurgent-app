@@ -78,6 +78,9 @@
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('user.invoices')">
+                                {{ __('Invoice') }}
+                            </x-dropdown-link>
 
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
@@ -116,6 +119,17 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">
+                {{ __('About') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')">
+                {{ __('Product') }}
+            </x-responsive-nav-link>
+            @role('admin')
+                <x-responsive-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
+                    {{ __('Admin Menu') }}
+                </x-responsive-nav-link>
+            @endrole
             <x-responsive-nav-link :href="route('cart.index')" :active="request()->routeIs('cart.index')" class="relative inline-block">
                 {{ __('Cart') }}
                 @if (session('cartItemCount', 0) > 0)
@@ -149,6 +163,9 @@
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')">
                         {{ __('Profile') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('user.invoices')">
+                        {{ __('Invoice') }}
                     </x-responsive-nav-link>
 
                     <!-- Authentication -->

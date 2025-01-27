@@ -49,11 +49,10 @@
                             </x-sidebar-link>
                         </li>
                         <li>
-                            <a href="#"
-                                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                                Account
-                            </a>
-                        </li>
+                            <x-sidebar-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
+                                <i class="fa-solid fa-user pr-2"></i>
+                                {{ __('Users') }}
+                            </x-sidebar-link>
                     </ul>
                 </div>
 
