@@ -30,7 +30,7 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('/admin/product', [ProductController::class, 'adminIndex'])->name('admin.products.index');
     // Route::get('/admin/stast', function () {
     //     return view('admin.stats');
-    // })->name('admin.stats');
+    // })->name('admin.stats');x
     Route::get('/admin/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::get('/admin/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');

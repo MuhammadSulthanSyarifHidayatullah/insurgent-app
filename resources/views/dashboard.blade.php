@@ -49,7 +49,7 @@
                 </div>
 
                 <div>
-                    <img src="https://placehold.co/600x400" class="rounded" alt="">
+                    <img src="{{ asset('dashboard/image-1.jpg') }}" class="rounded" alt="">
                 </div>
             </div>
         </div>
@@ -73,11 +73,11 @@
         <div class="max-w-7xl mx-auto">
             <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-12">Keunggulan Kami</h2>
             <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                <x-feature-card icon="{{ asset('advantage/advantage 1.svg') }}" title="Cepat"
+                <x-feature-card image="fa-bolt-lightning" title="Cepat" color="text-yellow-500"
                     description="Pengiriman cepat ke seluruh Indonesia dengan jasa ekspedisi terpercaya." />
-                <x-feature-card icon="{{ asset('advantage/advantage 1.svg') }}" title="Murah"
+                <x-feature-card image="fa-money-bill" title="Murah" color="text-green-500"
                     description="Harga terjangkau dengan kualitas terbaik untuk kepuasan Anda." />
-                <x-feature-card icon="{{ asset('advantage/advantage 1.svg') }}" title="Terpercaya"
+                <x-feature-card image="fa-square-check" title="Terpercaya" color="text-blue-500"
                     description="Ribuan pelanggan puas dengan pelayanan dan produk kami." />
             </div>
         </div>

@@ -10,9 +10,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Services\NotificationService;
 
 class CartController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     private function updateCartCount()
     {
         $cartCount = Cart::where('user_id', Auth::id())->sum('quantity');
@@ -97,6 +105,7 @@ class CartController extends Controller
             'postal_code' => 'required|string',
             'country' => 'required|string',
             'payment_method' => 'required|string|in:credit_card,paypal,bank_transfer',
+            'send_notification' => 'boolean',
         ]);
 
         $user = Auth::user();
@@ -166,6 +175,10 @@ class CartController extends Controller
             Cart::where('user_id', $user->id)->delete();
 
             DB::commit();
+
+            if ($request->input('send_notification', false)) {
+                $this->notificationService->sendCheckoutNotification($user, $invoice);
+            }
 
             return redirect()->route('invoice.show', $invoice)->with('success', 'Checkout successful!');
         } catch (\Exception $e) {
