@@ -28,14 +28,12 @@ Route::get('/products/{id}', [ProductController::class, 'show'])->name('products
 
 Route::middleware(['role:admin'])->group(function () {
     Route::get('/admin/product', [ProductController::class, 'adminIndex'])->name('admin.products.index');
-    // Route::get('/admin/stast', function () {
-    //     return view('admin.stats');
-    // })->name('admin.stats');x
     Route::get('/admin/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::get('/admin/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
-    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::delete('/admin/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+    // Route::post('/admin/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
     Route::get('/admin/statistics', [StatisticsController::class, 'index'])->name('statistics');
     Route::get('/admin/invoices', [InvoiceController::class, 'index'])->name('invoice.index');
     Route::get('/admin/users',[RegisteredUserController::class, 'index'])->name('admin.users.index');

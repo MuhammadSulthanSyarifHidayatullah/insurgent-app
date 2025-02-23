@@ -16,7 +16,7 @@ class Product extends Model
      * @var string
      */
     protected $table = 'products';
-
+    protected $dates = ['deleted_at'];
     /**
      * The attributes that are mass assignable.
      *
@@ -72,5 +72,6 @@ class Product extends Model
     {
         return $this->hasMany(InvoiceItem::class);
     }
+    
 
 }

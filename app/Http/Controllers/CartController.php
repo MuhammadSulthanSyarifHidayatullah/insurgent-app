@@ -92,6 +92,7 @@ class CartController extends Controller
         });
         $tax = $subtotal * 0.12; // 12% tax
         $total = $subtotal + $tax;
+        
 
         return view('cart.checkout_form', compact('cartItems', 'subtotal', 'tax', 'total', 'user'));
     }
@@ -187,5 +188,6 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('error', 'An error occurred during checkout. Please try again.');
         }
     }
+    
 }
 
