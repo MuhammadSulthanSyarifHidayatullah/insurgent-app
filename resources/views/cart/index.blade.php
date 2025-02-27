@@ -68,7 +68,7 @@
                                 <dl class="space-y-1 text-base text-gray-700">
                                     @php
                                         $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
-                                        $tax = $subtotal * 0.12; // Pajak 10%
+                                        $tax = $subtotal * 0.12; // Pajak 12%
                                         $total = $subtotal + $tax;
                                     @endphp
                                     <div class="flex justify-between">
