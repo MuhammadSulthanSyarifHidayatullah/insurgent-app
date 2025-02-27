@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-invoices', [InvoiceController::class, 'userInvoices'])->name('user.invoices');
     Route::get('/checkout', [CartController::class, 'showCheckoutForm'])->name('checkout.form');
     Route::post('/checkout', [CartController::class, 'processCheckout'])->name('checkout.process');
+    Route::post('/invoice/{invoice}/cancel', [InvoiceController::class, 'cancel'])->name('invoice.cancel');
 });
 
 

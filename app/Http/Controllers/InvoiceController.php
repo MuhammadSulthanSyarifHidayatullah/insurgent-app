@@ -92,4 +92,21 @@ class InvoiceController extends Controller
 
         return view('invoice.user-invoices', compact('invoices'));
     }
+    public function cancel(Invoice $invoice)
+{
+    if ($invoice->status !== 'pending') {
+        return redirect()->route('invoice.show', $invoice)->with('error', 'Only pending invoices can be cancelled.');
+    }
+
+    $invoice->update(['status' => 'cancelled']);
+
+    // Restore product stock
+    foreach ($invoice->items as $item) {
+        $product = Product::find($item->product_id);
+        $product->stock += $item->quantity;
+        $product->save();
+    }
+
+    return redirect()->route('invoice.show', $invoice)->with('success', 'Invoice cancelled successfully.');
+}
 }

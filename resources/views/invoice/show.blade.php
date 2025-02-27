@@ -172,6 +172,13 @@
                                     Pay Now
                                 </button>
                             </form>
+                            <form action="{{ route('invoice.cancel', $invoice) }}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                    Cancel
+                                </button>
+                            </form>
                         @endif
                         @if ($invoice->status === 'paid')
                             <button onclick="window.print()"
