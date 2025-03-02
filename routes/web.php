@@ -57,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/invoice/{invoice}', [InvoiceController::class, 'show'])->name('invoice.show');
     Route::post('/invoice/{invoice}/pay', [InvoiceController::class, 'pay'])->name('invoice.pay');
+    Route::get('/invoice/{invoice}/confirm', [InvoiceController::class, 'confirmPayment'])->name('invoice.confirm');
     Route::get('/my-invoices', [InvoiceController::class, 'userInvoices'])->name('user.invoices');
     Route::get('/checkout', [CartController::class, 'showCheckoutForm'])->name('checkout.form');
     Route::post('/checkout', [CartController::class, 'processCheckout'])->name('checkout.process');

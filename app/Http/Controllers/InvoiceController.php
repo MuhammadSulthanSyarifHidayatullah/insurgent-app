@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
-    public function checkout()
+    public function checkout(Request $request)
     {
         $user = Auth::user();
         $cartItems = Cart::where('user_id', $user->id)->with('product')->get();
@@ -70,11 +70,23 @@ class InvoiceController extends Controller
         return view('invoice.show', compact('invoice'));
     }
 
-    public function pay(Invoice $invoice)
+    public function pay(Request $request, Invoice $invoice)
     {
-        // Implement your payment logic here
-        // For this example, we'll just mark the invoice as paid
-        $invoice->update(['status' => 'paid']);
+        if ($invoice->payment_method == 'bank_transfer') {
+            $request->validate([
+                'bank_transfer_receipt' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            $path = $request->file('bank_transfer_receipt')->store('bank_transfer_receipts', 'public');
+
+            $invoice->update([
+                'status' => 'paid',
+                'bank_transfer_receipt' => $path,
+            ]);
+        } else {
+            $invoice->update(['status' => 'paid']);
+        }
+
         return redirect()->route('invoice.show', $invoice)->with('success', 'Payment successful!');
     }
 
@@ -93,20 +105,24 @@ class InvoiceController extends Controller
         return view('invoice.user-invoices', compact('invoices'));
     }
     public function cancel(Invoice $invoice)
-{
-    if ($invoice->status !== 'pending') {
-        return redirect()->route('invoice.show', $invoice)->with('error', 'Only pending invoices can be cancelled.');
+    {
+        if ($invoice->status !== 'pending') {
+            return redirect()->route('invoice.show', $invoice)->with('error', 'Only pending invoices can be cancelled.');
+        }
+
+        $invoice->update(['status' => 'cancelled']);
+
+        // Restore product stock
+        foreach ($invoice->items as $item) {
+            $product = Product::find($item->product_id);
+            $product->stock += $item->quantity;
+            $product->save();
+        }
+
+        return redirect()->route('invoice.show', $invoice)->with('success', 'Invoice cancelled successfully.');
     }
-
-    $invoice->update(['status' => 'cancelled']);
-
-    // Restore product stock
-    foreach ($invoice->items as $item) {
-        $product = Product::find($item->product_id);
-        $product->stock += $item->quantity;
-        $product->save();
+    public function confirmPayment(Invoice $invoice)
+    {
+        return view('invoice.confirm', compact('invoice'));
     }
-
-    return redirect()->route('invoice.show', $invoice)->with('success', 'Invoice cancelled successfully.');
-}
 }
