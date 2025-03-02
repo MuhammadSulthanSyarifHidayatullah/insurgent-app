@@ -19,13 +19,14 @@ class BackupController extends Controller
     public function backup(Request $request)
     {
         $backupFile = 'backup-' . now()->format('Y-m-d-H-i-s') . '.sql';
+        $backupPath = public_path('backup/' . $backupFile);
         $command = sprintf(
             'mysqldump --user=%s --password=%s --host=%s %s > %s',
             env('DB_USERNAME'),
             env('DB_PASSWORD'),
             env('DB_HOST'),
             env('DB_DATABASE'),
-            storage_path('app/' . $backupFile) // Lokasi penyimpanan file backup
+            $backupPath // Lokasi penyimpanan file backup
         );
 
         $result = null;
@@ -47,8 +48,9 @@ class BackupController extends Controller
     public function download(Request $request)
     {
         $backupFile = $request->session()->get('backup_file');
-        if ($backupFile && Storage::exists('app/' . $backupFile)) {
-            return Storage::download('app/' . $backupFile);
+        $backupPath = public_path('backup/' . $backupFile);
+        if ($backupFile && file_exists($backupPath)) {
+            return response()->download($backupPath);
         } else {
             return redirect()->route('admin.backup.index')->with('error', 'No backup file available for download.');
         }
