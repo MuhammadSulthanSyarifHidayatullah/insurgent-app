@@ -1,6 +1,22 @@
 <x-app-layout>
     <x-slot name="title">Dashboard | Partisan</x-slot>
 
+    <!-- Warning Message Modal for Missing Address -->
+
+    @auth
+        @if (empty(auth()->user()->address) ||
+                empty(auth()->user()->city) ||
+                empty(auth()->user()->state) ||
+                empty(auth()->user()->postal_code) ||
+                empty(auth()->user()->country))
+            <div class="bg-red-500 px-4 py-3 text-white">
+                <p class="text-center text-sm font-medium">
+                    Kamu Belum Mengisi Alamat Isi Sekarang di 
+                    <a href="{{ route('profile.edit') }}" class="inline-block underline">Profile</a>
+                </p>
+            </div>
+        @endif
+    @endauth
     <!-- Hero Section -->
     <section class="relative bg-cover bg-center bg-no-repeat h-screen flex items-center"
         style="background-image: url('{{ asset('images/header-image.jpg') }}')">

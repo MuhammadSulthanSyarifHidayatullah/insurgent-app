@@ -92,7 +92,6 @@ class CartController extends Controller
         });
         $tax = $subtotal * 0.12; // 12% tax
         $total = $subtotal + $tax;
-        
 
         return view('cart.checkout_form', compact('cartItems', 'subtotal', 'tax', 'total', 'user'));
     }
@@ -100,13 +99,8 @@ class CartController extends Controller
     public function processCheckout(Request $request)
     {
         $request->validate([
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'postal_code' => 'required|string',
-            'country' => 'required|string',
             'payment_method' => 'required|string|in:credit_card,paypal,bank_transfer',
-            'send_notification' => 'boolean',
+            'terms' => 'accepted',
         ]);
 
         $user = Auth::user();
@@ -124,17 +118,17 @@ class CartController extends Controller
 
             foreach ($cartItems as $item) {
                 $product = $item->product;
-            
+
                 // Check if there's enough stock
                 if ($product->stock < $item->quantity) {
                     $outOfStockItems[] = $product->name;
                     continue;
                 }
-            
+
                 // Reduce stock
                 $product->stock -= $item->quantity;
                 $product->save();
-            
+
                 $subtotal += $item->quantity * $item->price;
             }
 
@@ -155,11 +149,11 @@ class CartController extends Controller
                 'total_amount' => $totalAmount,
                 'status' => 'pending',
                 'name' => $user->name,
-                'address' => $request->address,
-                'city' => $request->city,
-                'state' => $request->state,
-                'postal_code' => $request->postal_code,
-                'country' => $request->country,
+                'address' => $user->address,
+                'city' => $user->city,
+                'state' => $user->state,
+                'postal_code' => $user->postal_code,
+                'country' => $user->country,
                 'payment_method' => $request->payment_method,
             ]);
 
@@ -188,6 +182,4 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('error', 'An error occurred during checkout. Please try again.');
         }
     }
-    
 }
-
