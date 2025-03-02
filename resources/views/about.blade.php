@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="title">About | Partisan</x-slot>
     <section>
-        <div class="mx-auto max-w-screen-2xl px-4 py-8 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-screen-2xl px-4 py-8 sm:px-6 lg:px-8 bg-gray-200">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div class="bg-gray-600 p-8 md:p-12 lg:px-16 lg:py-24 rounded-md shadow-md">
                     <div class="mx-auto max-w-xl text-center">
@@ -82,10 +82,4 @@
             </div>
         </div>
     </section>
-
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path fill="#d1d5db" fill-opacity="1"
-            d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
-        </path>
-    </svg>
 </x-app-layout>

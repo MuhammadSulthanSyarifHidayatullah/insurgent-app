@@ -53,6 +53,19 @@
                                 <i class="fa-solid fa-user pr-2"></i>
                                 {{ __('Users') }}
                             </x-sidebar-link>
+                        </li>
+                        <li>
+                            <x-sidebar-link :href="route('admin.notifications.index')" :active="request()->routeIs('admin.notifications.index')">
+                                <i class="fa-solid fa-bell pr-2"></i>
+                                {{ __('Notifications') }}
+                            </x-sidebar-link>
+                        </li>
+                        <li>
+                            <x-sidebar-link :href="route('admin.backup.index')" :active="request()->routeIs('admin.backup.index')">
+                                <i class="fa-solid fa-database pr-2"></i>
+                                {{ __('Backup Database') }}
+                            </x-sidebar-link>
+                        </li>
                     </ul>
                 </div>
 

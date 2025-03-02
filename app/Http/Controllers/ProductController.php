@@ -5,53 +5,51 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductSize;
 use Illuminate\Http\Request;
+use App\Services\NotificationService;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     public function index()
     {
-        $products = Product::all();
+        $products = Product::where('is_active', true)->get();
         return view('products.index', compact('products'));
     }
+
     public function adminIndex()
     {
-        $products = Product::all();
+        $products = Product::withTrashed()->get();
         return view('admin.products.index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('admin.products.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // Validasi data input
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'send_notification' => 'boolean',
         ]);
 
-        // Simpan data produk
         $product = new Product();
         $product->name = $request->input('name');
         $product->description = $request->input('description');
         $product->price = $request->input('price');
         $product->stock = $request->input('stock');
 
-        // Jika ada file image yang diupload
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);
@@ -60,45 +58,35 @@ class ProductController extends Controller
 
         $product->save();
 
-
         $sizes = ['S', 'M', 'L', 'XL'];
         foreach ($sizes as $size) {
             ProductSize::create([
                 'product_id' => $product->id,
                 'size' => $size,
-                // 'stock' => 0, // Set default stock ke 0 atau sesuai kebutuhan
             ]);
+        }
+
+        if ($request->input('send_notification', false)) {
+            $this->notificationService->sendNewProductNotification($product);
         }
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
-        $product = Product::with('sizes')->findOrFail($id); // Mengambil data produk beserta ukuran
+        $product = Product::with('sizes')->findOrFail($id);
         return view('products.show', compact('product'));
     }
 
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
-        $product = Product::findOrFail($id); // Temukan produk berdasarkan ID
+        $product = Product::findOrFail($id);
         return view('admin.products.edit', compact('product'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
-        // Validasi data input
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -107,14 +95,12 @@ class ProductController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Temukan produk berdasarkan ID dan update datanya
         $product = Product::findOrFail($id);
         $product->name = $request->input('name');
         $product->description = $request->input('description');
         $product->price = $request->input('price');
         $product->stock = $request->input('stock');
 
-        // Jika ada file image yang diupload, ganti gambar lama
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);
@@ -123,16 +109,46 @@ class ProductController extends Controller
 
         $product->save();
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully!');
+        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::withTrashed()->findOrFail($id);
+
+        if ($product->trashed()) {
+            if ($product->invoiceItems()->exists()) {
+                return redirect()->route('admin.products.index')->with('error', 'Cannot permanently delete a product with associated orders.');
+            }
+            $product->forceDelete();
+            return redirect()->route('admin.products.index')->with('success', 'Product permanently deleted.');
+        }
+
+        if ($product->invoiceItems()->exists()) {
+            $product->update(['is_active' => false]);
+            $product->delete();
+            return redirect()->route('admin.products.index')->with('warning', 'Product has been deactivated and soft deleted because it has associated orders.');
+        }
+
         $product->delete();
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully!');
+        return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully!');
+    }
+
+    public function restore($id)
+    {
+        $product = Product::withTrashed()->findOrFail($id);
+        $product->restore();
+        $product->update(['is_active' => true]);
+        return redirect()->route('admin.products.index')->with('success', 'Product restored successfully!');
+    }
+
+    public function toggleActive($id)
+    {
+        $product = Product::withTrashed()->findOrFail($id);
+        $product->is_active = !$product->is_active;
+        $product->save();
+
+        $status = $product->is_active ? 'activated' : 'deactivated';
+        return redirect()->route('admin.products.index')->with('success', "Product {$status} successfully!");
     }
 }

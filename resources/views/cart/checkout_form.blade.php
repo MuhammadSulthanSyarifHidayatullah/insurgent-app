@@ -1,107 +1,118 @@
 <x-app-layout>
-    <div class="">
+    <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden  sm:rounded-lg">
-                <div class="p-6 bg-white border-gray-200">
-                    <form method="POST" action="{{ route('checkout.process') }}">
-                        @csrf
-                        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
-                            <div class="p-8 rounded-lg bg-gray-100">
-                                <div class="mb-4">
-                                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                                    <input type="text" name="name" id="name" value="{{ $user->name }}"
-                                        class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        readonly>
-                                </div>
-                                <div class="flex gap-4">
-                                    <div class="mb-4 flex-grow">
-                                        <label for="address"
-                                            class="block text-sm font-medium text-gray-700">Address</label>
-                                        <input type="text" name="address" id="address"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                            required>
-                                    </div>
-                                </div>
-                                <div class="flex gap-4">
-                                    <div class="mb-4 flex-grow">
-                                        <label for="city"
-                                            class="block text-sm font-medium text-gray-700">City</label>
-                                        <input type="text" name="city" id="city"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                            required>
-                                    </div>
-                                    <div class="mb-4 flex-grow">
-                                        <label for="state"
-                                            class="block text-sm font-medium text-gray-700">State/Province</label>
-                                        <input type="text" name="state" id="state"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                            required>
-                                    </div>
-                                    <div class="mb-4 flex-grow">
-                                        <label for="postal_code" class="block text-sm font-medium text-gray-700">Postal
-                                            Code</label>
-                                        <input type="text" name="postal_code" id="postal_code"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                            required>
-                                    </div>
-                                    <div class="mb-4 flex-grow">
-                                        <label for="country"
-                                            class="block text-sm font-medium text-gray-700">Country</label>
-                                        <input type="text" name="country" id="country"
-                                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                            required>
-                                    </div>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="payment_method" class="block text-sm font-medium text-gray-700">Payment
-                                        Method</label>
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <h1 class="text-2xl font-bold mb-8">Checkout</h1>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Left Column - Payment Information -->
+                        <div class="lg:col-span-2">
+                            <form id="checkout-form" method="POST" action="{{ route('checkout.process') }}"
+                                class="space-y-6">
+                                @csrf
+
+                                <!-- Payment Method -->
+                                <div class="mt-4">
+                                    <label for="payment_method" class="block text-sm font-medium text-gray-700">
+                                        Payment Method <span class="text-red-500">*</span>
+                                    </label>
                                     <select name="payment_method" id="payment_method"
-                                        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                         required>
-                                        <option value="">Select a payment method</option>
-                                        <option value="credit_card"><i class="fa-solid fa-credit-card"></i>Credit Card</option>
-                                        <option value="paypal">PayPal</option>
-                                        <option value="bank_transfer">Bank Transfer</option>
+                                        <option value="">Select payment method</option>
+                                        <option value="credit_card"
+                                            {{ old('payment_method') == 'credit_card' ? 'selected' : '' }}>Credit Card
+                                        </option>
+                                        <option value="bank_transfer"
+                                            {{ old('payment_method') == 'bank_transfer' ? 'selected' : '' }}>Bank
+                                            Transfer</option>
+                                        <option value="paypal"
+                                            {{ old('payment_method') == 'paypal' ? 'selected' : '' }}>PayPal</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="p-8 rounded-lg bg-gray-100  grid content-between">
+
+                                <!-- WhatsApp Notification -->
                                 <div class="mt-4">
-                                    <h3 class="text-lg font-medium text-gray-900">Order Summary</h3>
-                                    <dl class="mt-2 space-y-2">
-                                        <div class="flex justify-between">
-                                            <dt class="text-sm text-gray-600">Subtotal</dt>
-                                            <dd class="text-sm font-medium text-gray-900">Rp
-                                                {{ number_format($subtotal, 2, ',', '.') }}</dd>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <dt class="text-sm text-gray-600">Tax (12%)</dt>
-                                            <dd class="text-sm font-medium text-gray-900">Rp
-                                                {{ number_format($tax, 2, ',', '.') }}</dd>
-                                        </div>
-                                        <div class="flex justify-between border-t border-gray-200 pt-2">
-                                            <dt class="text-base font-medium text-gray-900">Total</dt>
-                                            <dd class="text-base font-medium text-gray-900">Rp
-                                                {{ number_format($total, 2, ',', '.') }}</dd>
-                                        </div>
-                                    </dl>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="send_notification" value="1"
+                                            class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                            {{ old('send_notification') ? 'checked' : '' }}>
+                                        <span class="ml-2 text-sm text-gray-600">Send order confirmation via
+                                            WhatsApp</span>
+                                    </label>
                                 </div>
+
+                                <!-- Terms and Conditions -->
                                 <div class="mt-6">
-                                    <button type="submit"
-                                        class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        Place Order
-                                    </button>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="terms"
+                                            class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                            required>
+                                        <span class="ml-2 text-sm text-gray-600">I have read and agree to the <a
+                                                href="#" class="text-blue-600 hover:underline">Terms and
+                                                Conditions</a>.</span>
+                                    </label>
+                                </div>
+
+                                <!-- Pay Now Button -->
+                                <button type="submit" form="checkout-form"
+                                    class="w-full mt-6 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                    Pay Now
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Right Column - Cart Review -->
+                        <div class="lg:col-span-1">
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h2 class="text-xl font-semibold mb-4">Review your cart</h2>
+
+                                <!-- Cart Items -->
+                                <div class="space-y-4 mb-6">
+                                    @foreach ($cartItems as $item)
+                                        <div class="flex items-center space-x-4">
+                                            <img src="{{ $item->product->image ? asset('images/' . $item->product->image) : asset('images/placeholder.jpg') }}"
+                                                alt="{{ $item->product->name }}"
+                                                class="w-16 h-16 object-cover rounded-lg">
+                                            <div class="flex-1">
+                                                <h3 class="font-medium">{{ $item->product->name }}</h3>
+                                                <p class="text-sm text-gray-500">{{ $item->quantity }}x</p>
+                                            </div>
+                                            <div class="text-right">
+                                                <p class="font-medium">Rp
+                                                    {{ number_format($item->price * $item->quantity, 2, ',', '.') }}</p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <!-- Order Summary -->
+                                <div class="border-t pt-4 space-y-2">
+                                    <div class="flex justify-between font-semibold text-lg pt-2">
+                                        <span>Total</span>
+                                        <span>Rp {{ number_format($total, 2, ',', '.') }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Security Notice -->
+                                <div class="mt-6 text-center">
+                                    <div class="flex items-center justify-center text-gray-600 text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                        </svg>
+                                        Secure Checkout - SSL Encrypted
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-1">Ensuring your financial and personal details
+                                        are secure during every transaction.</p>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path fill="#d1d5db" fill-opacity="1"
-            d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
-        </path>
-    </svg>
 </x-app-layout>

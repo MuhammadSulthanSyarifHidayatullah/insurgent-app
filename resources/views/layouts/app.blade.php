@@ -17,7 +17,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased bg-gray-100">
     <div class="min-h-screen">
         @include('layouts.navigation')
 
@@ -34,9 +34,9 @@
         <main>
             {{ $slot }}
         </main>
-        <footer class="bg-gray-300">
+        {{-- <footer class="bg-gray-300">
             @yield('footer', view('layouts.footer'))
-        </footer>
+        </footer> --}}
 
     </div>
 </body>

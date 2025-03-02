@@ -29,6 +29,12 @@
                     <input class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                         type="file" name="image" id="image">
                 </div>
+                <div class="flex items-center mt-4">
+                    <input id="send_notification" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="send_notification" value="1">
+                    <label for="send_notification" class="ml-2 block text-sm text-gray-700">
+                        Send notification to all users about this new product
+                    </label>
+                </div>
                 <div class="flex justify-center mt-2">
                     <x-primary-button type="submit">Create Product</x-primary-button>
                 </div>

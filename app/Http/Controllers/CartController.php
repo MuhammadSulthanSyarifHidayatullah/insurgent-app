@@ -10,9 +10,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Services\NotificationService;
 
 class CartController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     private function updateCartCount()
     {
         $cartCount = Cart::where('user_id', Auth::id())->sum('quantity');
@@ -91,12 +99,8 @@ class CartController extends Controller
     public function processCheckout(Request $request)
     {
         $request->validate([
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'postal_code' => 'required|string',
-            'country' => 'required|string',
             'payment_method' => 'required|string|in:credit_card,paypal,bank_transfer',
+            'terms' => 'accepted',
         ]);
 
         $user = Auth::user();
@@ -114,17 +118,17 @@ class CartController extends Controller
 
             foreach ($cartItems as $item) {
                 $product = $item->product;
-            
+
                 // Check if there's enough stock
                 if ($product->stock < $item->quantity) {
                     $outOfStockItems[] = $product->name;
                     continue;
                 }
-            
+
                 // Reduce stock
                 $product->stock -= $item->quantity;
                 $product->save();
-            
+
                 $subtotal += $item->quantity * $item->price;
             }
 
@@ -145,11 +149,11 @@ class CartController extends Controller
                 'total_amount' => $totalAmount,
                 'status' => 'pending',
                 'name' => $user->name,
-                'address' => $request->address,
-                'city' => $request->city,
-                'state' => $request->state,
-                'postal_code' => $request->postal_code,
-                'country' => $request->country,
+                'address' => $user->address,
+                'city' => $user->city,
+                'state' => $user->state,
+                'postal_code' => $user->postal_code,
+                'country' => $user->country,
                 'payment_method' => $request->payment_method,
             ]);
 
@@ -167,6 +171,10 @@ class CartController extends Controller
 
             DB::commit();
 
+            if ($request->input('send_notification', false)) {
+                $this->notificationService->sendCheckoutNotification($user, $invoice);
+            }
+
             return redirect()->route('invoice.show', $invoice)->with('success', 'Checkout successful!');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -175,4 +183,3 @@ class CartController extends Controller
         }
     }
 }
-

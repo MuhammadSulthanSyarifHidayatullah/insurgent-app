@@ -1,4 +1,3 @@
-
 <footer class="">
     <div class="mx-auto max-w-5xl px-4 pb-16 bg-gray-300 sm:px-6 lg:px-8">
         <div class="flex justify-center">

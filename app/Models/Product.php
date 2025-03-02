@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use SoftDeletes,HasFactory;
 
     /**
      * The table associated with the model.
@@ -15,7 +16,7 @@ class Product extends Model
      * @var string
      */
     protected $table = 'products';
-
+    protected $dates = ['deleted_at'];
     /**
      * The attributes that are mass assignable.
      *
@@ -71,5 +72,6 @@ class Product extends Model
     {
         return $this->hasMany(InvoiceItem::class);
     }
+    
 
 }

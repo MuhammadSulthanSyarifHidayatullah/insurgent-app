@@ -23,6 +23,11 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'address',
+        'city',
+        'state',
+        'postal_code',
+        'country',
     ];
 
     /**
@@ -51,4 +56,5 @@ class User extends Authenticatable
     {
         return !is_null($this->phone_number);
     }
+    
 }
