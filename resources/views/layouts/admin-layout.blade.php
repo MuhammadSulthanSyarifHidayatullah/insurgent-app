@@ -60,6 +60,12 @@
                                 {{ __('Notifications') }}
                             </x-sidebar-link>
                         </li>
+                        <li>
+                            <x-sidebar-link :href="route('admin.backup.index')" :active="request()->routeIs('admin.backup.index')">
+                                <i class="fa-solid fa-database pr-2"></i>
+                                {{ __('Backup Database') }}
+                            </x-sidebar-link>
+                        </li>
                     </ul>
                 </div>
 

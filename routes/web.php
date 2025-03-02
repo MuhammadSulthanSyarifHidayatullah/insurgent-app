@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\BackupController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\GoogleLoginController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\InvoiceController;
@@ -21,6 +23,8 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('about');
 })->name('about');
+Route::get('/login/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('/login/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
 
 Route::resource('products', ProductController::class);
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -43,6 +47,9 @@ Route::middleware(['role:admin'])->group(function () {
     Route::delete('/admin/users/{user}', [RegisteredUserController::class, 'destroy'])->name('admin.users.destroy');
     Route::get('/admin/notifications', [NotificationController::class, 'index'])->name('admin.notifications.index');
     Route::post('/admin/notifications/send', [NotificationController::class, 'send'])->name('admin.notifications.send');
+    Route::get('/admin/backup', [BackupController::class, 'index'])->name('admin.backup.index');
+    Route::post('/admin/backup', [BackupController::class, 'backup'])->name('admin.backup');
+    Route::get('/admin/backup/download', [BackupController::class, 'download'])->name('admin.backup.download');
 });
 
 
